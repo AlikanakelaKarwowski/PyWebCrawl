@@ -33,6 +33,7 @@ while i < 2:
     exp_date = driver.find_element_by_id('warrantyExpiringLabel')
     date = exp_date.text
 
-    monthFormat(date)
+    date = monthFormat(date)
+    print("Tyler is expired past " + date)
     i +=1
 driver.close()

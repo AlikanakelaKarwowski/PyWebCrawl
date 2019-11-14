@@ -29,4 +29,5 @@ def monthFormat(dates):
     split_date = dates.split(" ")
     month = month_num(split_date[2])
     format = month + "/" + split_date[1] +"/" + split_date[3]
-    print (format)
+    #print (format)
+    return format
