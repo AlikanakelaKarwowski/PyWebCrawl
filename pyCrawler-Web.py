@@ -22,7 +22,7 @@ i = 0
 driver = Chrome()
 #amount of time to wait for the page to load (in seconds)
 timeout = 5
-def getExpiration(driver_type, time):
+def getExpiration(driver_type, time, i):
     while i < 2:
         driver_type.get("https://dell.com/support/home/us/en/04/")
 
@@ -43,4 +43,5 @@ def getExpiration(driver_type, time):
         date = monthFormat(date)
         print("Tyler is expired past " + date)
         i +=1
+getExpiration(driver,timeout, i)
 driver.close()
