@@ -41,32 +41,41 @@ login_btn = driver.find_element_by_id('btnLogin')
 login_btn.click()
 
 mouse.position = (655, 244)
+
+time.sleep(3)
+
 mouse.click(Button.left, 1)
 
 time.sleep(3)
 
 mouse.position = (696, 297)
 
+mouse.position = (831, 300)
+
 time.sleep(3)
 
-mouse.position = (831, 300)
 mouse.click(Button.left, 1)
 
 time.sleep(3)
 
 mouse.position = (275, 1011)
+
+time.sleep(3)
+
 mouse.click(Button.left, 1)
 
 time.sleep(3)
 
 mouse.position = (365, 365)
-mouse.click(Button.left, 1)
+
 time.sleep(3)
+
+mouse.click(Button.left, 1)
+
+time.sleep(3)
+
 serial_box = driver.find_element_by_name('serial_number')
 serial_number = serial_box.get_attribute('value')
-
-
-
 
 driver.get('https://dell.com/support/home/us/en/04/')
 
