@@ -1,6 +1,6 @@
-* PyWebCrawler is an open source project I created and if you don't like it you can F*CK right off.
+*PyWebCrawler* is an open source project I created and if you don't like it you can F*CK right off.
 
-I made it for a friend, to be used with their IT ticketing system.
+* I made it for a friend, to be used with their IT ticketing system.
 
 * Instructions:
 1) Must have python installed 2.7 or greater
