@@ -31,7 +31,8 @@ print ("Current Position" + str(mouse.position))
 driver.get('https://footprints12.uakron.edu/footprints/servicedesk/login.html')
 
 login_id = driver.find_element_by_name('username')
-login_id.send_keys('tlj25')
+username = input("What is your username: ")
+login_id.send_keys(username)
 
 login_pass = driver.find_element_by_name('password')
 password = input('What is your password: ')
