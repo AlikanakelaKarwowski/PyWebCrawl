@@ -6,6 +6,8 @@ import sys
 from pyMonthNum import month_num
 from pyMonthNum import monthFormat
 
+#simulate mouse usage
+from pynput.mouse import Button, Controller
 #import selenium for web browser usage
 from selenium import webdriver
 from selenium.webdriver import Chrome
@@ -17,31 +19,73 @@ from selenium.webdriver.common.by import By
 
 #counter for looping
 i = 0
-
 #using chrome driver
 driver = Chrome()
 #amount of time to wait for the page to load (in seconds)
 timeout = 5
-def getExpiration(driver_type, time, i):
-    while i < 2:
-        driver_type.get("https://dell.com/support/home/us/en/04/")
+#mouse object
+mouse = Controller()
 
-        #root folder for submission directory
-        id_box = driver_type.find_element_by_name('search-input')
-        id_box.send_keys('5w2tms1')
+print ("Current Position" + str(mouse.position))
 
-        btn = driver_type.find_element_by_id('btnSearch')
-        btn.click()
+driver.get('https://footprints12.uakron.edu/footprints/servicedesk/login.html')
 
-        element_present = EC.presence_of_element_located((By.ID, 'warrantyExpiringLabel'))
+login_id = driver.find_element_by_name('username')
+login_id.send_keys('tlj25')
 
-        WebDriverWait(driver_type, time).until(element_present)
+login_pass = driver.find_element_by_name('password')
+password = input('What is your password: ')
+login_pass.send_keys(password)
 
-        exp_date = driver_type.find_element_by_id('warrantyExpiringLabel')
-        date = exp_date.text
+login_btn = driver.find_element_by_id('btnLogin')
+login_btn.click()
 
-        date = monthFormat(date)
-        print("Tyler is expired past " + date)
-        i +=1
-getExpiration(driver,timeout, i)
+mouse.position = (655, 244)
+mouse.click(Button.left, 1)
+
+time.sleep(3)
+
+mouse.position = (696, 297)
+
+time.sleep(3)
+
+mouse.position = (831, 300)
+mouse.click(Button.left, 1)
+
+time.sleep(3)
+
+mouse.position = (275, 1011)
+mouse.click(Button.left, 1)
+
+time.sleep(3)
+
+mouse.position = (365, 365)
+mouse.click(Button.left, 1)
+time.sleep(3)
+serial_box = driver.find_element_by_name('serial_number')
+serial_number = serial_box.get_attribute('value')
+
+
+
+
+driver.get('https://dell.com/support/home/us/en/04/')
+
+#link_id = driver.find_elements_by_xpath('//*[@id="tableview-1298-record-14300"]/tbody/tr/td[3]/div')
+
+id_box = driver.find_element_by_name('search-input')
+id_box.send_keys(serial_number)
+
+btn = driver.find_element_by_id('btnSearch')
+btn.click()
+
+element_present = EC.presence_of_element_located((By.ID, 'warrantyExpiringLabel'))
+
+WebDriverWait(driver, timeout).until(element_present)
+
+exp_date = driver.find_element_by_id('warrantyExpiringLabel')
+date = exp_date.text
+
+date = monthFormat(date)
+print("Tyler has been expired since: " + date)
+
 driver.close()
