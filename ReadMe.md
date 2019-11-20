@@ -5,9 +5,9 @@
 
 1. Must have python installed 2.7 or greater
 
-  a. If you do not have python installed, goto https://www.python.org/downloads/ and download version 3.8 or higher for your operating system.
+      a. If you do not have python installed, goto https://www.python.org/downloads/ and download version 3.8 or higher for your operating system.
 
-  b. When you install python, there is an option to "ADD TO PATH". Make sure that is checked before installing.
+      b. When you install python, there is an option to "ADD TO PATH". Make sure that is checked before installing.
 
 2. Make sure that you have Python added to your PATH. If you don't have it added to your PATH, or are not sure, follow the directions [here](https://datatofish.com/add-python-to-windows-path/)
 3. Download the chromedriver for selenium. The chromedriver included in this git is for chrome version 79. Make sure to update chrome to version 79 for this script to work correctly. Click [here](https://support.google.com/chrome/answer/95414?co=GENIE.Platform%3DDesktop&hl=en) for instructions on how to update your version of chrome.  
