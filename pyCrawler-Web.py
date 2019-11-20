@@ -19,39 +19,59 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-def login_Function(mouse, driver):
+#Global Mouse Positions#
+#---------------------#
+#p1 = the close automation window
+p1 = (934, 100)
+#p2 = login Button
+p2 = (486, 446)
+#p3 = cmdb hover
+p3 = (676, 310)
+#p4 = move to computers
+p4 = (839, 310)
+#p5 = move to last page
+p5 = (275, 1015)
+#p6 = click first ticket
+p6 = (366, 374)
+#p7 = submit Button
+p7 = (72, 291)
+def login_Function(mouse, driver, p1,p2):
     #closes the automation method
-    mouse.position = (745,104)
+    mouse.position = p1
     mouse.click(Button.left, 2)
-    #finds login box
+
+    #finds login box and sends the username to the box
     login_id = driver.find_element_by_name('username')
-    username = input("What is your username: ")
-    #sends username to box
     login_id.send_keys(username)
-    #finds password box
+
+    #finds password box and sends the password to the box
     login_pass = driver.find_element_by_name('password')
-    password = input('What is your password: ')
-    #sends password to box
     login_pass.send_keys(password)
-    #clicks login button
-    mouse.position = (394, 361)
-    mouse.click(Button.left, 2)
-    #wait for loading
-    time.sleep(30)
 
-def ticketing(mouse):
-    #moves to view and clicks
-    mouse.position = (655, 314)
+    #clicks login button, it doesnt always work so click it to hell
+    mouse.position = p2
     time.sleep(1)
-    mouse.click(Button.left, 1)
-    time.sleep(3)
+    mouse.click(Button.left, 5)
 
-    #moves to cdma
-    mouse.position = (674, 346)
+    #wait for page to load element
+    #element_present = EC.presence_of_element_located((By.classname(), "x-grid-item-container"))
+    #wait some more not really
+    #WebDriverWait(driver, 45).until(element_present)
+
+    #wait for loading
+    time.sleep(40)
+
+def ticketing(mouse, driver,p3,p4,p5):
+
+    #moves to view and clicks
+    driver.find_element_by_id("tab-1064").click()
+
+    #moves to cmdb
+    mouse.position = p3
     time.sleep(1)
 
     #moves to computers and clicks
-    mouse.position = (530, 349)
+    mouse.position = p4
     time.sleep(1)
     mouse.click(Button.left, 1)
 
@@ -59,16 +79,16 @@ def ticketing(mouse):
     time.sleep(3)
 
     #move to last page and clicks
-    mouse.position = (274, 797)
-    time.sleep(3)
+    mouse.position = p5
+    time.sleep(1.5)
     mouse.click(Button.left, 1)
 
     #wait for loading
     time.sleep(3)
 
-def ticket_auto(mouse, driver):
+def ticket_auto(mouse, driver, p6):
     #move to the first ticket number and clicks
-    mouse.position = (366, 434)
+    mouse.position = p6
     time.sleep(1)
     mouse.click(Button.left, 1)
 
@@ -80,36 +100,45 @@ def ticket_auto(mouse, driver):
     serial_number = serial_box.get_attribute('value')
     return serial_number
 
-def warranty_search(timeout, keyboard, serial, driver2, intialized):
-    if intialized == true:
+def warranty_search(timeout, keyboard, serial,driver2):
+    #create driver for new chrome page
+    try:
+        driver2.get('https://dell.com/support/home/us/en/04/')
+        time.sleep(1.5)
+
+        #get search box and send it the serial number
+        id_box = driver2.find_element_by_name('search-input')
+        id_box.send_keys(serial)
+
+        #click the search button by element id
+        btn = driver2.find_element_by_id('btnSearch')
+        btn.click()
+
+        #wait for page to load element
+        element_present = EC.presence_of_element_located((By.ID, 'warrantyExpiringLabel'))
+        #wait some more not really
+        WebDriverWait(driver2, timeout).until(element_present)
+
+        #find the expiration date
+        exp_date = driver2.find_element_by_id('warrantyExpiringLabel')
+        date = exp_date.text
+
+        #convert the date to proper formating
+        date = monthFormat(date)
+
+        #tab out to the other page
         keyboard.press(Key.alt)
         keyboard.press(Key.tab)
         keyboard.release(Key.tab)
         keyboard.release(Key.alt)
 
-    #get search box and send it the serial number
-    id_box = driver2.find_element_by_name('search-input')
-    id_box.send_keys(serial)
+    except:
+        warranty_search(timeout,keyboard, serial, driver2)
+    else:
+        #return the date
+        return date
 
-    #click the search button by element id
-    btn = driver2.find_element_by_id('btnSearch')
-    btn.click()
-
-    #wait for page to load element
-    element_present = EC.presence_of_element_located((By.ID, 'warrantyExpiringLabel'))
-    #wait some more not really
-    WebDriverWait(driver2, timeout).until(element_present)
-
-    #find the expiration date
-    exp_date = driver2.find_element_by_id('warrantyExpiringLabel')
-    date = exp_date.text
-
-    #convert the date to proper formating
-    date = monthFormat(date)
-    #return the date
-    return date
-
-def ticket_fill(date, driver, mouse):
+def ticket_fill(date, driver, mouse,p7):
     #find expiration box and send in the date
     exp_box = driver.find_element_by_name('date_warranty_expires')
     exp_box.send_keys(date)
@@ -123,43 +152,50 @@ def ticket_fill(date, driver, mouse):
     req_box.send_keys('unknown')
 
     #move to submit and click submit
-    mouse.position = (74, 350)
+    mouse.position = p7
     time.sleep(1)
     mouse.click(Button.left, 1)
     time.sleep(3)
-    print("Happy Time")
+    print("Ticket updated")
 
-#counter for looping
-i = 0
+#driver.get('https://footprints12.uakron.edu/footprints/servicedesk/login.html')
+# main program loop
+def queryOnce(driver, driver2, p1, p2, p3, p4, p5, p6, p7):
+    while True:
+        try:
+            #mouse object
+            mouse = Controller()
+            keyboard = KeyboardController()
+            driver.get('https://footprints12.uakron.edu/footprints/servicedesk/login.html')
+
+            login_Function(mouse, driver, p1,p2)
+            ticketing(mouse, driver, p3, p4, p5)
+
+            while True:
+                #click the current ticket
+                serial = ticket_auto(mouse, driver, p6)
+                #get the date
+                #amount of time to wait for the page to load (in seconds)
+                timeout = 5
+                date = warranty_search(timeout, keyboard, serial,driver2)
+                #submit the information
+                ticket_fill(date, driver, mouse, p7)
+        except:
+            pass
+        else:
+            break
+
+# repeat loop in case of crashing
+def queryRepeadetly(driver, driver2, p1, p2, p3, p4, p5, p6, p7):
+    while True:
+        queryOnce(driver, driver2, p1, p2, p3, p4, p5, p6, p7)
+        time.sleep(5)
+
 #using chrome driver
 driver = Chrome()
-#amount of time to wait for the page to load (in seconds)
-timeout = 7
-
-intialized= "false"
-#mouse object
-mouse = Controller()
-keyboard = KeyboardController()
-
-driver.get('https://footprints12.uakron.edu/footprints/servicedesk/login.html')
-
-login_Function(mouse, driver)
-
-ticketing(mouse)
+driver.set_window_size(974,1047)
+driver.set_window_position(-7,0)
 driver2 = Chrome()
-driver2.get('https://dell.com/support/home/us/en/04/')
-#tab out to the other page
-keyboard.press(Key.alt)
-keyboard.press(Key.tab)
-keyboard.release(Key.tab)
-keyboard.release(Key.alt)
-while i <  25:
-    #click the current ticket
-    serial = ticket_auto(mouse, driver)
-    #get the date
-    date = warranty_search(timeout, keyboard, "123wer", driver2, intialized )
-    #tab out to the other page
-    #submit the information
-    ticket_fill(date, driver, mouse)
-    intialized = "true"
-    i +=1
+driver2.set_window_position(904, 453)
+driver2.set_window_size(1030, 747)
+queryRepeadetly(driver, driver2, p1, p2, p3, p4, p5, p6, p7)
