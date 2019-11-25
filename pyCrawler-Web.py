@@ -19,8 +19,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-#Global Mouse Positions#
-#---------------------#
+#----------------------------------#
+#------Global Mouse Positions------#
+#----------------------------------#
 #p1 = the close automation window
 p1 = (934, 100)
 #p2 = login Button
@@ -35,11 +36,13 @@ p5 = (275, 1015)
 p6 = (366, 374)
 #p7 = submit Button
 p7 = (72, 291)
+#----------------------------------#
+#----------------------------------#
 def login_Function(mouse, driver, p1,p2):
     #closes the automation method
     mouse.position = p1
     mouse.click(Button.left, 2)
-
+    time.sleep(1)
     #finds login box and sends the username to the box
     login_id = driver.find_element_by_name('username')
     login_id.send_keys(username)
@@ -68,7 +71,7 @@ def ticketing(mouse, driver,p3,p4,p5):
 
     #moves to cmdb
     mouse.position = p3
-    time.sleep(1)
+    time.sleep(3)
 
     #moves to computers and clicks
     mouse.position = p4
